@@ -69,9 +69,6 @@ class Auth0Controller extends Controller
           'body' => $options['body'] ?? ''
         ];
 
-        // Make it clear we want to communicate using JSON
-        $request['headers']['Content-Type'] = 'application/json';
-
         // If we have a Bearer token, attach that to the request to authorize the call.
         if ($bearer = ($options['token'] ?? $this->apiToken)) {
             $request['headers']['Authorization'] = 'Bearer ' . $bearer;
