@@ -95,7 +95,7 @@ git clone https://github.com/evansims/auth0-example-server.git
 
 ### 4. Configure your Auth0 credentials
 
-1. Open .env
+1. Duplicate `.env.default` and name it `.env`
 2. Set the value of `AUTH0_CLIENTID` to the Client ID of your M2M Application, setup in the previous steps.
 3. Set `AUTH0_SECRET` to the Client Secret of your M2M Application.
 4. Set `AUTH0_DOMAIN` to the Domain of your M2M Application.
