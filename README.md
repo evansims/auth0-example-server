@@ -11,10 +11,10 @@ This example project uses the [Lumen microframework](https://lumen.laravel.com/)
 This project demonstrates the following functions:
 
 - Validating access tokens, in this case from the [frontend client](https://github.com/evansims/auth0-example-client)
-- Fetch Auth0's JWKS keys from the API
-- Verifying token signatures using JWKS keys
+- Fetching the appropriate JWKS
+- Verifying access token signatures using JWKS
 - Authenticating API requests from Auth0's Authentication API before issuing Management API calls
-- Demonstrate simple Management API calls — specifically, the /users endpoint, listing and searching users.
+- Simple Management API calls — specifically, the /users endpoint, listing and searching users.
 
 ### Authenticating
 
