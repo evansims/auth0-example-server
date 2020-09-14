@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  app:
+    build: docker/php
+    container_name: auth0-example-server-app
+    working_dir: /var/www/
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: app
+    volumes:
+      - ./:/var/www
+
+  nginx:
+    image: nginx:alpine
+    container_name: auth0-example-server-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '8000:80'
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: http
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d/
+
+  db:
+    image: mysql:5.7
+    container_name: auth0-example-server-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: sql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+  default:
+    name: auth0-example-network
+    driver: bridge
