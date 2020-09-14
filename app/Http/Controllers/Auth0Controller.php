@@ -55,11 +55,13 @@ class Auth0Controller extends Controller
 
     private function apiConstructUri($endpoint)
     {
+        // Construct a URI using the AUTH0_DOMAIN configured.
         return 'https://' . join('/', [env('AUTH0_DOMAIN'), $endpoint]) . '/';
     }
 
     public function apiRequest($endpoint, $options = [])
     {
+        // Build our API request payload.
         $request = [
           'headers' => $options['headers'] ?? [],
           'form_params' => $options['form'] ?? [],
@@ -67,20 +69,27 @@ class Auth0Controller extends Controller
           'body' => $options['body'] ?? ''
         ];
 
-        $request['headers'][] = 'Content-Type: application/json';
+        // Make it clear we want to communicate using JSON
+        $request['headers']['Content-Type'] = 'application/json';
 
+        // If we have a Bearer token, attach that to the request to authorize the call.
         if ($bearer = ($options['token'] ?? $this->apiToken)) {
             $request['headers']['Authorization'] = 'Bearer ' . $bearer;
         }
 
+        // Issue the API request.
         $response = $this->http->request(($options['method'] ?? 'GET'), $endpoint, array_filter($request));
 
+        // Was the call successful?
         if ($response->getStatusCode() === 200) {
+            // Was the response in valid JSON?
             if (strpos($response->getHeader('Content-Type')[0], 'application/json') !== false) {
+                // Decode and return an object representing the response.
                 return json_decode((string)$response->getBody()->getContents(), true);
             }
         }
 
+        // Encountered an invalid response, abort.
         return false;
     }
 

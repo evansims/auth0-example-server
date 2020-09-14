@@ -19,51 +19,41 @@ class UsersController extends Controller
         // Inform Lumen this API makes use of the AuthServiceProvider
         $this->middleware('auth');
 
+        // Create an alias to our Auth0Controller for issuing API requests.
         $this->Auth0  = app('App\Http\Controllers\Auth0Controller');
     }
 
     public function list(Request $request)
     {
-        // $user = $request->user();
+        // API results are paginated. Passing a ?page parameter (defaulting to 0) will return additional results.
         $page = $request->input('page', 0);
+
+        // Filter user results using a search term.
         $q = $request->input('q', null);
 
-        $accounts = $this->Auth0->getUsers(['q' => $q, 'page' => $page, 'sort' => 'nickname:1']);
+        // Issue a request to Auth0's Management API to pull matching users.
+        $users = $this->Auth0->getUsers([
+          'q' => $q,
+          'page' => $page,
+          'sort' => 'nickname:1'
+        ]);
         $response = [];
 
-        foreach ($accounts as $account) {
+        // Iterate over users and transform into a JSON API compatible response.
+        foreach ($users as $user) {
           $response[] = (object)[
-            'id' => ltrim($account['user_id'], 'auth0|'),
+            'id' => ltrim($user['user_id'], 'auth0|'),
             'type' => 'user',
-            'attributes' => $account
+            'attributes' => $user
           ];
         }
 
+        // Return the transformed users list.
         return response()->json([
           "jsonapi" => [
             "version" => "1.0"
           ],
           'data' => $response
         ], 200);
-    }
-
-    public function create()
-    {
-        return 'create()';
-    }
-
-    public function get()
-    {
-        return 'get()';
-    }
-
-    public function update()
-    {
-        return 'update()';
-    }
-
-    public function delete()
-    {
-        return 'delete()';
     }
 }
