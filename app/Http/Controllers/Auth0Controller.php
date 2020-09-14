@@ -26,28 +26,28 @@ class Auth0Controller extends Controller
     {
         // Create a Guzzle client for issuing our API requests to Auth0.
         $this->http = new Guzzle([
-          'base_uri' => $this->apiConstructUri('api/v2'),
-          'timeout'  => 2.0,
+            'base_uri' => $this->apiConstructUri('api/v2'),
+            'timeout'  => 2.0,
         ]);
 
         // Create and store an access token for our API requests.
         $token = $this->apiRequest(
             $this->apiConstructUri('oauth/token'),
             [
-          'method' => 'POST',
-          'form' => [
-            'grant_type' => 'client_credentials',
-            'client_id' => env('AUTH0_CLIENTID'),
-            'client_secret' => env('AUTH0_SECRET'),
-            'audience' => env('AUTHO_AUDIENCE')
+                'method' => 'POST',
+                'form' => [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => env('AUTH0_CLIENTID'),
+                    'client_secret' => env('AUTH0_SECRET'),
+                    'audience' => env('AUTHO_AUDIENCE')
+                ]
             ]
-          ]
         );
 
         // Check if we have an access token, and our scope allows for reading users.
         if ($token && isset($token['access_token'])) {
-          $this->apiToken = $token['access_token'];
-          return;
+            $this->apiToken = $token['access_token'];
+            return;
         }
 
         abort(403, 'Unauthorized action.');
@@ -63,10 +63,10 @@ class Auth0Controller extends Controller
     {
         // Build our API request payload.
         $request = [
-          'headers' => $options['headers'] ?? [],
-          'form_params' => $options['form'] ?? [],
-          'query' => $options['query'] ?? [],
-          'body' => $options['body'] ?? ''
+            'headers' => $options['headers'] ?? [],
+            'form_params' => $options['form'] ?? [],
+            'query' => $options['query'] ?? [],
+            'body' => $options['body'] ?? ''
         ];
 
         // If we have a Bearer token, attach that to the request to authorize the call.
@@ -95,13 +95,13 @@ class Auth0Controller extends Controller
         // Possible filtering options we can pass to Auth0's /users endpoint.
         // See: https://auth0.com/docs/api/management/v2#!/Users/get_users
         $query = array_filter([
-          'page' => $options['page'] ?? 0,
-          'per_page' => $options['per_page'] ?? 5,
-          'include_totals' => $options['include_totals'] ?? false,
-          'sort' => $options['sort'] ?? 'username:1',
-          'fields' => $options['fields'] ?? null,
-          'include_fields' => $options['include_fields'] ?? null,
-          'q' => $options['q'] ?? null
+            'page' => $options['page'] ?? 0,
+            'per_page' => $options['per_page'] ?? 5,
+            'include_totals' => $options['include_totals'] ?? false,
+            'sort' => $options['sort'] ?? 'username:1',
+            'fields' => $options['fields'] ?? null,
+            'include_fields' => $options['include_fields'] ?? null,
+            'q' => $options['q'] ?? null
         ]);
 
         // Issue the request and return an object representing the results.
@@ -113,8 +113,8 @@ class Auth0Controller extends Controller
         // Possible filtering options we can pass to Auth0's /users/{id} endpoint.
         // See: https://auth0.com/docs/api/management/v2#!/Users/get_users_by_id
         $query = array_filter([
-          'fields' => $options['fields'] ?? null,
-          'include_fields' => $options['include_fields'] ?? null
+            'fields' => $options['fields'] ?? null,
+            'include_fields' => $options['include_fields'] ?? null
         ]);
 
         // Issue the request and return an object representing the results.

@@ -33,27 +33,27 @@ class UsersController extends Controller
 
         // Issue a request to Auth0's Management API to pull matching users.
         $users = $this->Auth0->getUsers([
-          'q' => $q,
-          'page' => $page,
-          'sort' => 'nickname:1'
+            'q' => $q,
+            'page' => $page,
+            'sort' => 'nickname:1'
         ]);
         $response = [];
 
         // Iterate over users and transform into a JSON API compatible response.
         foreach ($users as $user) {
-          $response[] = (object)[
-            'id' => ltrim($user['user_id'], 'auth0|'),
-            'type' => 'user',
-            'attributes' => $user
+            $response[] = (object)[
+              'id' => ltrim($user['user_id'], 'auth0|'),
+              'type' => 'user',
+              'attributes' => $user
           ];
         }
 
         // Return the transformed users list.
         return response()->json([
-          "jsonapi" => [
-            "version" => "1.0"
-          ],
-          'data' => $response
+            "jsonapi" => [
+                "version" => "1.0"
+            ],
+            'data' => $response
         ], 200);
     }
 }
