@@ -126,11 +126,13 @@ class Auth0Controller extends Controller
         // Parse the supplied JWT using a helper library
         if (!($token = (new Parser())->parse($token))) {
             throw new Exception("Invalid JWT token supplied.");
+            return;
         }
 
         // Verify the supplied key's algorithim is appropriate
         if ($token->getHeader('alg') !== 'RS256') {
-            throw new Exception("Invalid JWT algorithim supplied.");
+            throw new Exception("Invalid JWT algorithm supplied.");
+            return;
         }
 
         // Do some basic validation checks on the JWT to ensure it's appropriately configured
@@ -141,11 +143,13 @@ class Auth0Controller extends Controller
         // Did the token validate successfully?
         if (!$token->validate($validator)) {
             throw new Exception("Invalid JWT token supplied.");
+            return;
         }
 
         // Get the JWT signature hint, to help identify what key the JWT was signed using.
         if (!$signatureHint = $token->getHeader('kid', null)) {
             throw new Exception("Unable to find signature hint.");
+            return;
         }
 
         // Get the available JWT signing keys from Auth0's servers, match it with the one specified in the JWT
@@ -154,6 +158,13 @@ class Auth0Controller extends Controller
         // Verify the signature of the JWT using our JWKS key.
         if (!$token->verify(new Sha256(), $signature)) {
             throw new Exception("Signature of JWT was invalid.");
+            return;
+        }
+
+        // Verify the token is genuine with the Authentication API
+        if (!($user = $this->apiRequest('https://' . env('AUTH0_DOMAIN') . '/userinfo', ['token' => $token]))) {
+            throw new Exception("Token is not genuine.");
+            return;
         }
 
         return ['token' => $token];
