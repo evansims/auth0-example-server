@@ -109,6 +109,8 @@ curl \
 
 This demonstration API pulls a list of users from Auth0's Management API through a `/users` endpoint. This endpoint supports searching and pagination.
 
+> The following examples use cURL to make the requests, which can be ran from your terminal/shell. Text in ALL_CAPS is meant to be replaced with your own values as appropriate.
+
 To return a paginated list of users:
 
 ```
