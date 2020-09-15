@@ -18,7 +18,7 @@ class Auth0Controller extends Controller
     protected $apiToken;
 
     /**
-     * Create a new controller instance.
+     * Setup our Guzzle client and get our M2M token for issuing requests.
      *
      * @return void
      */
@@ -44,7 +44,7 @@ class Auth0Controller extends Controller
             ]
         );
 
-        // Check if we have an access token, and our scope allows for reading users.
+        // Check if we received an access token.
         if ($token && isset($token['access_token'])) {
             $this->apiToken = $token['access_token'];
             return;
@@ -53,12 +53,22 @@ class Auth0Controller extends Controller
         abort(403, 'Unauthorized action.');
     }
 
+    /**
+     * Construct a URI using the AUTH0_DOMAIN configured.
+     *
+     * @return string
+     */
     private function apiConstructUri($endpoint)
     {
-        // Construct a URI using the AUTH0_DOMAIN configured.
         return 'https://' . join('/', [env('AUTH0_DOMAIN'), $endpoint]) . '/';
     }
 
+    /**
+     * Build and send an API request to Auth0's servers.
+     * Verify the JSON response and transform into a PHP array.
+     *
+     * @return array
+     */
     public function apiRequest($endpoint, $options = [])
     {
         // Build our API request payload.
@@ -87,9 +97,14 @@ class Auth0Controller extends Controller
         }
 
         // Encountered an invalid response, abort.
-        return false;
+        return [];
     }
 
+    /**
+     * Return an array of users matching the query from the Auth0 Management API.
+     *
+     * @return array
+     */
     public function getUsers($options = [])
     {
         // Possible filtering options we can pass to Auth0's /users endpoint.
@@ -108,6 +123,11 @@ class Auth0Controller extends Controller
         return $this->apiRequest('users', ['query' => $query]);
     }
 
+    /**
+     * Return an array representing a specific user from the Auth0 Management API.
+     *
+     * @return array
+     */
     public function getUser($id, $options = [])
     {
         // Possible filtering options we can pass to Auth0's /users/{id} endpoint.
@@ -121,6 +141,13 @@ class Auth0Controller extends Controller
         return $this->apiRequest(join('/', ['user', $id]), ['query' => $query]);
     }
 
+    /**
+     * Invoked by the AuthServiceProvider at boot to validate an API request.
+     * Every API request checks for and validates a JWT before processing calls.
+     * An invalid or missing JWT will immediately terminate the request.
+     *
+     * @return array
+     */
     public function handleAuthentication($token)
     {
         // Parse the supplied JWT using a helper library
@@ -129,7 +156,7 @@ class Auth0Controller extends Controller
             return;
         }
 
-        // Verify the supplied key's algorithim is appropriate
+        // Verify the supplied key's algorithm is appropriate
         if ($token->getHeader('alg') !== 'RS256') {
             throw new Exception("Invalid JWT algorithm supplied.");
             return;
@@ -162,6 +189,7 @@ class Auth0Controller extends Controller
         }
 
         // Verify the token is genuine with the Authentication API
+        // NOTE: This is redundant as we are verifying the signature of the JWT, but is useful for reference.
         if (!($user = $this->apiRequest('https://' . env('AUTH0_DOMAIN') . '/userinfo', ['token' => $token]))) {
             throw new Exception("Token is not genuine.");
             return;
@@ -170,15 +198,16 @@ class Auth0Controller extends Controller
         return ['token' => $token];
     }
 
-    private function getJWKS($kid = null)
+    /**
+     * Download the appropriate JWKS from Auth0's servers. Filter and parse the results and extra the
+     * x509 certificate we need to verify an incoming JWT signature.
+     *
+     * @return object
+     */
+    private function getJWKS($kid)
     {
         // Issue the request to Auth0's servers, which are always located at /.well-known/jwks.json off your API domain.
         if ($jwks = $this->apiRequest('https://' . env('AUTH0_DOMAIN') . '/.well-known/jwks.json')) {
-            // If we didn't specify which key to return, return them all.
-            if (!$kid) {
-                return $jwks;
-            }
-
             // Attempt to find the key that was requested in the JWKS array.
             if ($jwks && is_array($jwks) && isset($jwks['keys']) && is_array($jwks)) {
                 foreach ($jwks['keys'] as $jwk) {

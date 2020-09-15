@@ -10,7 +10,7 @@ class UsersController extends Controller
     protected $Auth0;
 
     /**
-     * Create a new controller instance.
+     * Setup our users controller to use authentication.
      *
      * @return void
      */
@@ -23,6 +23,12 @@ class UsersController extends Controller
         $this->Auth0  = app('App\Http\Controllers\Auth0Controller');
     }
 
+    /**
+     * Fetch a paginated list of users from Auth0's Management API.
+     * Transform the results for JSON API compatibility, for clean consumption from our frontend client.
+     *
+     * @return void
+     */
     public function list(Request $request)
     {
         // API results are paginated. Passing a ?page parameter (defaulting to 0) will return additional results.
