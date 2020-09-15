@@ -97,6 +97,8 @@ This demonstration API expects a `token` parameter containing a valid Auth0 JWT 
 
 [You can learn more about generating access tokens here.](https://auth0.com/docs/tokens/access-tokens)
 
+> The following examples use cURL to make the requests, which can be ran from your terminal/shell. Text in ALL_CAPS is meant to be replaced with your own values as appropriate.
+
 Manually issuing an API call with an access token might look like this:
 
 ```
@@ -108,8 +110,6 @@ curl \
 ### Listing and Searching for Users
 
 This demonstration API pulls a list of users from Auth0's Management API through a `/users` endpoint. This endpoint supports searching and pagination.
-
-> The following examples use cURL to make the requests, which can be ran from your terminal/shell. Text in ALL_CAPS is meant to be replaced with your own values as appropriate.
 
 To return a paginated list of users:
 
