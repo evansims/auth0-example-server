@@ -4,6 +4,8 @@ Thanks for your interest in my demonstration backend server of [Auth0's](https:/
 
 This repository houses the PHP-based backend server, using the [Lumen microframework](https://lumen.laravel.com/). [The accompanying JavaScript-based frontend can be found here.](https://github.com/evansims/auth0-example-client)
 
+As an exercise, this project does not make use of [the official Auth0 PHP SDK](https://auth0.com/docs/libraries/auth0-php), but you should considering using that for your own projects.
+
 ## Overview of the Demonstration API
 
 This project demonstrates the following functions:
