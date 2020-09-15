@@ -42,8 +42,8 @@ git clone https://github.com/evansims/auth0-example-server.git
 1. From your [Auth0 dashboard](https://manage.auth0.com/dashboard/) select 'APIs' from the sidebar.
 2. For efficiency sake we'll select the existing 'Auth0 Management API', but you can create your own if you prefer. Select your API of choice.
 3. Under the _Settings_ tab, make note of the unique `Identifier` value, you'll need this for configuring the server and the [frontend](https://github.com/evansims/auth0-example-client).
-4. Under the _Machine to Machine Applications_ tab, authorize the Application you created in the previous step.
-5. Click the > arrow next to your application name to display permissions/scopes available to your application.
+4. Under the _Machine to Machine Applications_ tab, authorize the Application you created in the previous step (by flipping it's toggle in the right/green position.)
+5. Click the `>` arrow next to your application's name to display permissions/scopes available to your application.
     - The only permission required for this example is 'read:users' but you can "select all" if you prefer.
 6. Press 'update' to apply the permissions to your Application.
 
