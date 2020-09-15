@@ -1,20 +1,29 @@
 # Auth0 Demonstration Client
 
-Thanks for your interest in my demonstration server of [Auth0's](https://auth0.com/) robust authentication and management APIs. This is one half of a project demonstrating how one might go about implimenting Auth0's APIs to interact with a custom frontend.
+Thanks for your interest in my demonstration backend server of [Auth0's](https://auth0.com/) APIs. This is one half of a project demonstrating how one might go about implementing Auth0's authentication API to interact with a custom backend.
 
-This repo houses the PHP-based backend server. [The accompanying JavaScript-based backend server can be found here.](https://github.com/evansims/auth0-example-client)
-
-This example project uses the [Lumen microframework](https://lumen.laravel.com/) but you could use any framework at all to build a server like this, simply adapt the techniques used here appropriately.
+This repository houses the PHP-based backend server, using the [Lumen microframework](https://lumen.laravel.com/). [The accompanying JavaScript-based frontend can be found here.](https://github.com/evansims/auth0-example-client)
 
 ## Overview of the Demonstration API
 
 This project demonstrates the following functions:
 
-- Validating access tokens, in this case from the [frontend client](https://github.com/evansims/auth0-example-client)
-- Fetching the appropriate JWKS
-- Verifying access token signatures using JWKS
-- Authenticating API requests from Auth0's Authentication API before issuing Management API calls
-- Simple Management API calls — specifically, the /users endpoint, listing and searching users.
+-   Approving requests authenticated with Auth0's Authentication API
+    -   Validating JWT access tokens provided by the [frontend client](https://github.com/evansims/auth0-example-client)
+    -   Verifying access token signatures using JWKS
+-   Issuing Auth0 Management API calls
+    -   We're using the /users endpoint, but this demonstration could be expanded for any calls to the Management API.
+    -   We're demonstrating searching users, and paginated results.
+-   This demonstration server transforms responses to the JSON API specification, for easy consumption by the [frontend client](https://github.com/evansims/auth0-example-client) as Ember Data models.
+
+## Requirements
+
+-   An [Auth0 account](https://manage.auth0.com/dashboard)
+-   [Docker](https://www.docker.com/)
+-   The counterpart [frontend client](https://github.com/evansims/auth0-example-server)
+
+<details>
+    <summary><h2>Demonstration API Reference</h2></summary>
 
 ### Authenticating
 
@@ -58,10 +67,7 @@ curl \
   --url 'http://localhost:8000/users?token=YOUR_ACCESS_TOKEN&q=SEARCH_TERM'
 ```
 
-## Requirements
-
-- [Docker](https://www.docker.com/)
-- The paired [example client](https://github.com/evansims/auth0-example-client)
+</details>
 
 ## Getting Started
 
@@ -128,8 +134,8 @@ $ docker-compose down
 
 ## Auth0 Documentation
 
-- Documentation for Auth0's APIs can be found [here](https://auth0.com/docs/api/info).
-- Quickstarts for a variety of use cases, languages and respective frameworks can be found [here](https://auth0.com/docs/quickstarts).
+-   Documentation for Auth0's APIs can be found [here](https://auth0.com/docs/api/info).
+-   Quickstarts for a variety of use cases, languages and respective frameworks can be found [here](https://auth0.com/docs/quickstarts).
 
 ## Contributing
 
