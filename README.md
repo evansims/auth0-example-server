@@ -119,7 +119,9 @@ curl \
   --url 'http://localhost:8000/users?token=YOUR_ACCESS_TOKEN'
 ```
 
-To paginate for more results users, pass a `page` parameter with the next page value you want. Remember that results begin at page 0.
+To return the next set of users, pass a `page` parameter with the next page value you're wanting. Continue incrementing this value until you have all the results you want.
+
+Remember that results begin at page 0.
 
 ```
 curl \
