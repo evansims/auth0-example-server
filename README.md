@@ -1,4 +1,4 @@
-# Auth0 Demonstration Client
+# Auth0 Demonstration Server/API
 
 Thanks for your interest in my demonstration backend server of [Auth0's](https://auth0.com/) APIs. This is one half of a project demonstrating how one might go about implementing Auth0's authentication API to interact with a custom backend.
 
